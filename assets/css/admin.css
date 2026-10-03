@@ -1,0 +1,926 @@
+/* =====================================================
+   ADMIN - Xe điện Tiệp Anh (dùng cùng token màu với style.css)
+===================================================== */
+
+:root {
+  --font-sans: "Be Vietnam Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --primary: #006b2c;
+  --primary-dark: #005320;
+  --primary-soft: #e8f7ec;
+  --background: #f4f6fb;
+  --surface: #ffffff;
+  --text: #131b2e;
+  --text-muted: #5b6577;
+  --border: #dfe4ee;
+  --danger: #ba1a1a;
+  --warn: #8a5a00;
+  --radius: 12px;
+  --sidebar-width: 248px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body.admin-body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--primary);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-sans);
+  margin: 0;
+}
+
+.material-symbols-outlined {
+  font-size: 22px;
+  vertical-align: middle;
+}
+
+/* ---------- Layout ---------- */
+
+.admin-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 40;
+  width: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 14px;
+  background: #0f2a1a;
+  color: #fff;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+}
+
+.admin-sidebar.open {
+  transform: none;
+}
+
+.admin-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(19, 27, 46, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.admin-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 18px;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.admin-brand small {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-nav a,
+.admin-sidebar-foot a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 0 14px;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.admin-nav a:hover,
+.admin-sidebar-foot a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.admin-nav a.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.admin-sidebar-foot {
+  margin-top: auto;
+}
+
+.admin-shell {
+  min-height: 100vh;
+}
+
+.admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 8px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-topbar h1 {
+  font-size: 19px;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-menu-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.admin-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-user-name {
+  display: none;
+  text-align: right;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.admin-user-name small {
+  display: block;
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.admin-main {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  max-width: 1280px;
+}
+
+.admin-grid-2 > *,
+.admin-card {
+  min-width: 0;
+}
+
+@media (min-width: 992px) {
+  .admin-sidebar {
+    transform: none;
+  }
+
+  .admin-backdrop {
+    display: none;
+  }
+
+  .admin-shell {
+    margin-left: var(--sidebar-width);
+  }
+
+  .admin-menu-button {
+    display: none;
+  }
+
+  .admin-user-name {
+    display: block;
+  }
+
+  .admin-main {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 575px) {
+  .hide-mobile {
+    display: none;
+  }
+}
+
+/* ---------- Components ---------- */
+
+.admin-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.admin-card > h2 {
+  font-size: 17px;
+  margin-bottom: 12px;
+}
+
+.admin-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.admin-card-head h2 {
+  font-size: 17px;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (min-width: 992px) {
+  .admin-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.admin-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+.admin-stat span.label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.admin-stat strong {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-size: 22px;
+}
+
+.admin-stat.warn strong {
+  color: var(--warn);
+}
+
+.admin-grid-2 {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 1100px) {
+  .admin-grid-2 {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}
+
+.admin-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.admin-button:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.admin-button.ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.admin-button.ghost:hover {
+  background: var(--background);
+}
+
+.admin-button.danger {
+  background: transparent;
+  color: var(--danger);
+  border-color: #f0c4c0;
+}
+
+.admin-button.danger:hover {
+  background: #fdecea;
+}
+
+.admin-button.small {
+  min-height: 44px;
+  padding: 0 12px;
+  font-size: 15px;
+}
+
+.admin-alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid;
+  font-weight: 500;
+}
+
+.admin-alert.success {
+  background: var(--primary-soft);
+  border-color: #b7e3c3;
+  color: var(--primary-dark);
+}
+
+.admin-alert.error {
+  background: #fdecea;
+  border-color: #f0c4c0;
+  color: var(--danger);
+}
+
+.admin-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tone-ok {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+.tone-warn {
+  background: #fff3d6;
+  color: var(--warn);
+}
+
+.tone-info {
+  background: #e3efff;
+  color: #14508f;
+}
+
+.tone-bad {
+  background: #fdecea;
+  color: var(--danger);
+}
+
+.tone-muted {
+  background: #eceff5;
+  color: var(--text-muted);
+}
+
+/* ---------- Tables ---------- */
+
+.admin-table-wrap {
+  overflow-x: auto;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.admin-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.admin-table td.num,
+.admin-table th.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-thumb {
+  width: 56px;
+  height: 42px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--background);
+}
+
+.admin-empty {
+  padding: 28px 10px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ---------- Forms ---------- */
+
+.admin-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.admin-filters > * {
+  flex: 1 1 160px;
+}
+
+.admin-input,
+.admin-select,
+.admin-textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+}
+
+.admin-textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.admin-input:focus,
+.admin-select:focus,
+.admin-textarea:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+  border-color: var(--primary);
+}
+
+.admin-form-grid {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 768px) {
+  .admin-form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-form-grid .full {
+    grid-column: 1 / -1;
+  }
+}
+
+.admin-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.admin-field small {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-muted);
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-inline-form {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.admin-inline-form .admin-input {
+  width: 90px;
+}
+
+.admin-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.admin-pagination a,
+.admin-pagination span {
+  min-width: 44px;
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.admin-pagination span.current {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.admin-dl {
+  display: grid;
+  gap: 8px 16px;
+  margin: 0;
+}
+
+@media (min-width: 600px) {
+  .admin-dl {
+    grid-template-columns: 170px 1fr;
+  }
+}
+
+.admin-dl dt {
+  color: var(--text-muted);
+}
+
+.admin-dl dd {
+  margin: 0;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* ---------- Login ---------- */
+
+.admin-login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: linear-gradient(160deg, #0f2a1a, #006b2c);
+}
+
+.admin-login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 28px 24px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+}
+
+.admin-login-card h1 {
+  font-size: 24px;
+  margin: 8px 0 4px;
+}
+
+.admin-login-card p {
+  margin: 0 0 18px;
+  color: var(--text-muted);
+}
+
+.admin-login-card .admin-field {
+  margin-bottom: 14px;
+}
+
+.admin-login-card .admin-button {
+  width: 100%;
+}
+
+/* ---------- Scroll reveal (cùng cơ chế với website) ---------- */
+
+html.js-reveal .reveal:not(.is-visible),
+html.js-reveal .reveal-item:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+html.js-reveal .reveal,
+html.js-reveal .reveal-item {
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js-reveal .reveal,
+  html.js-reveal .reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .admin-sidebar,
+  .admin-backdrop {
+    transition: none;
+  }
+}
+
+/* Một phông chữ duy nhất (hỗ trợ đầy đủ tiếng Việt), kể cả form và nút */
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-sans);
+}
+
+/* ---------- Chứng từ (in được) ---------- */
+
+.admin-document-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--primary);
+}
+
+.admin-document-title {
+  text-align: right;
+}
+
+.admin-document-title h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  color: var(--primary);
+}
+
+.admin-signatures {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+  text-align: center;
+}
+
+.admin-signatures div {
+  min-height: 110px;
+}
+
+.admin-signatures span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+@media print {
+  .no-print,
+  .admin-sidebar,
+  .admin-topbar,
+  .admin-backdrop {
+    display: none !important;
+  }
+
+  .admin-shell {
+    margin: 0 !important;
+  }
+
+  body.admin-body {
+    background: #fff;
+  }
+
+  .admin-main {
+    padding: 0;
+    max-width: none;
+  }
+
+  .admin-card {
+    border: 0;
+    padding: 0;
+  }
+
+  html.js-reveal .reveal,
+  html.js-reveal .reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ---------- Form nhập hàng ---------- */
+
+.purchase-lines {
+  display: grid;
+  gap: 10px;
+}
+
+.purchase-line {
+  display: grid;
+  grid-template-columns: 1fr 88px 130px 44px;
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .purchase-line {
+    grid-template-columns: 1fr 1fr 44px;
+  }
+
+  .purchase-line select {
+    grid-column: 1 / -1;
+  }
+}
+
+.purchase-total {
+  font-size: 18px;
+}
+
+/* ---------- Biểu đồ đơn giản (dashboard) ---------- */
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 180px;
+  padding-top: 8px;
+}
+
+.chart-bar {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.chart-bar span {
+  display: block;
+  min-height: 2px;
+  border-radius: 4px 4px 0 0;
+  background: var(--primary);
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+
+.chart-bar:hover span,
+.chart-bar:focus span {
+  opacity: 1;
+}
+
+.chart-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.hbar-list {
+  display: grid;
+  gap: 12px;
+}
+
+.hbar-row {
+  display: grid;
+  gap: 4px;
+}
+
+.hbar-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.hbar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: #e8ecf4;
+  overflow: hidden;
+}
+
+.hbar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.admin-range-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-range-links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.admin-range-links a.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+/* ---------- Báo cáo AI ---------- */
+
+.ai-prompt {
+  display: grid;
+  gap: 10px;
+}
+
+.ai-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ai-suggestions button {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ai-suggestions button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.ai-note {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* Tránh tràn ngang trên mobile khi thanh công cụ có form lọc + nút */
+.admin-card-head > form,
+.admin-card-head > .admin-actions {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.admin-card-head > form {
+  flex: 1 1 220px;
+}
+
+.admin-stat strong {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 575px) {
+  .admin-stat strong {
+    font-size: 18px;
+  }
+}

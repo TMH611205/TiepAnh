@@ -1,0 +1,535 @@
+<?php
+
+/**
+ * Nạp sản phẩm thật của hai hãng KUMATSU và SONCO (thông số lấy từ trang hãng/nhà phân phối,
+ * xem mục "sources" của từng sản phẩm; ngày thu thập 03/10/2026).
+ *
+ *   php database/seed_brand_products.php          # ghi vào CSDL (chạy lại an toàn: cập nhật theo product_code)
+ *   php database/seed_brand_products.php --sql    # in câu lệnh SQL (để import bằng phpMyAdmin)
+ *
+ * Nguyên tắc: chỉ ghi số liệu có trên nguồn. Giá bán, bảo hành của Tiệp Anh, màu còn hàng, tồn kho
+ * chưa có dữ liệu nên để trống (null) và trang web hiển thị "[CẦN BỔ SUNG]".
+ * Cần chạy trước: database/migrations/002_product_details.sql
+ */
+
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
+const FETCHED_ON = '03/10/2026';
+const COLORS_BENLY = ['Đen', 'Xanh', 'Đỏ'];
+
+$products = [];
+
+// ------------------------------------------------------------------ KUMATSU BENLY
+$products[] = [
+    'category' => 'xe-may-dien',
+    'name' => 'Kumatsu Benly',
+    'slug' => 'kumatsu-benly',
+    'code' => 'KM-BENLY',
+    'image' => 'uploads/products/kumatsu-benly.jpg',
+    'description' => 'Xe máy điện Kumatsu Benly: động cơ 500W, ắc quy 48V/20Ah, đi khoảng 60–80 km mỗi lần sạc, 3 chế độ lái Eco – Normal – Sport, phanh đĩa trước và sau.',
+    'max_speed' => 50,
+    'battery_range' => 60,
+    'motor_power' => '500W',
+    'warranty_months' => 12,
+    'details' => [
+        'brand' => 'Kumatsu',
+        'variants' => [
+            ['name' => 'Benly (động cơ VS48V500WG)', 'price' => null, 'price_text' => '≈ 15.900.000 ₫ (giá tạm)', 'colors' => COLORS_BENLY, 'note' => 'Hãng bán các màu đen, xanh, đỏ…'],
+        ],
+        'battery' => [
+            'type' => 'Ắc quy (tùy phiên bản)',
+            'voltage_capacity' => '48V / 20Ah',
+            'range' => '60–80 km mỗi lần sạc (tùy điều kiện vận hành)',
+            'charge_time' => '6–10 giờ',
+            'warranty' => '6 tháng (tạm)',
+        ],
+        'spec_groups' => [
+            ['title' => 'Động cơ & vận hành', 'rows' => [
+                ['Động cơ', 'VS48V500WG, công suất từ 500W'],
+                ['Bộ điều khiển', 'GOBAO 25A'],
+                ['Cách thao tác', 'Tự động'],
+                ['Vận tốc tối đa', '40–50 km/h'],
+                ['Chế độ lái', 'Eco 1 – Normal 2 – Sport 3'],
+                ['Điện áp bảo vệ', '42V ±1'],
+                ['Dòng điện bảo vệ', '25A ±1'],
+            ]],
+            ['title' => 'Kích thước & trọng lượng', 'rows' => [
+                ['Dài × rộng × cao', '1.670 × 705 × 1.050 mm'],
+                ['Chiều dài cơ sở', '1.200 mm'],
+                ['Khối lượng bản thân', '84 kg'],
+                ['Khả năng chở nặng', '159 kg'],
+                ['Số người được chở', '1 người'],
+            ]],
+            ['title' => 'Khung gầm', 'rows' => [
+                ['Lốp trước / sau', '3.00-10 KENDA'],
+                ['Phanh', 'Đĩa trước và sau'],
+                ['Giảm xóc', 'Phuộc nhún trước và sau'],
+            ]],
+            ['title' => 'Điện & tiện ích', 'rows' => [
+                ['Hệ thống đèn', 'LED: đèn pha, đèn hậu, xi nhan'],
+                ['Màn hình', 'LCD điện tử: tốc độ, lượng pin, quãng đường'],
+                ['Chìa khóa', 'Smartkey: tìm xe, khóa/mở xe từ xa'],
+                ['Chống trộm', 'Cảnh báo khi có tác động bất thường'],
+                ['Cốp xe', 'Chứa áo mưa, đồ dùng cá nhân nhỏ'],
+            ]],
+            ['title' => 'Chứng nhận & xuất xứ', 'rows' => [
+                ['Nhãn hiệu / số loại', 'KUMATSU/BENLY'],
+                ['Xuất xứ', 'Việt Nam và liên doanh'],
+                ['Nhà sản xuất', 'Công ty TNHH TM và DV Việt Quang'],
+                ['Số chứng nhận', '10327/VAQ06-01/25-00'],
+            ]],
+        ],
+        'features' => [
+            ['icon' => 'tune', 'title' => '3 chế độ lái', 'text' => 'Chọn Eco, Normal hoặc Sport theo điều kiện di chuyển.'],
+            ['icon' => 'key', 'title' => 'Chìa khóa thông minh', 'text' => 'Khóa, mở xe và tìm xe từ xa.'],
+            ['icon' => 'lock', 'title' => 'Chế độ chống trộm', 'text' => 'Cảnh báo khi xe bị tác động bất thường.'],
+            ['icon' => 'speed', 'title' => 'Màn hình LCD điện tử', 'text' => 'Xem tốc độ, lượng pin và quãng đường ngay trên xe.'],
+            ['icon' => 'lightbulb', 'title' => 'Đèn LED tiết kiệm điện', 'text' => 'Đèn pha, đèn hậu và xi nhan chiếu sáng rõ.'],
+            ['icon' => 'health_and_safety', 'title' => 'Phanh đĩa trước và sau', 'text' => 'Tăng độ an toàn khi phanh gấp.'],
+        ],
+        'warranty' => [
+            'summary' => 'Thời hạn bảo hành dưới đây là số liệu tạm, sẽ được xác nhận khi báo giá. Gọi {phone} để biết chính xác.',
+            'items' => [
+                ['Bảo hành xe', '12 tháng (tạm)'],
+                ['Bảo hành ắc quy / pin', '6 tháng (tạm)'],
+                ['Bảo hành động cơ', '12 tháng (tạm)'],
+            ],
+            'aftersales' => [
+                'Nhà sản xuất: Công ty TNHH TM và DV Việt Quang. Hotline hãng 0966053077 (bán hàng), 0989124920 (kỹ thuật).',
+                'Mua và bảo dưỡng tại Tiệp Anh: gọi {phone} hoặc đến {address}.',
+            ],
+        ],
+        'faq' => [
+            ['q' => 'Xe đi được bao xa sau mỗi lần sạc?', 'a' => 'Hãng công bố khoảng 60–80 km mỗi lần sạc, tùy điều kiện vận hành.'],
+            ['q' => 'Sạc đầy mất bao lâu?', 'a' => 'Khoảng 6–10 giờ, tùy phiên bản ắc quy.'],
+            ['q' => 'Xe chở được mấy người, tải trọng bao nhiêu?', 'a' => 'Xe cho phép chở 1 người, khả năng chở nặng 159 kg.'],
+            ['q' => 'Xe có những màu nào?', 'a' => 'Hãng bán các màu đen, xanh, đỏ… Gọi {phone} để biết màu còn hàng.'],
+            ['q' => 'Giá bán và thời gian bảo hành là bao nhiêu?', 'a' => 'Giá tạm khoảng 15,9 triệu đồng, bảo hành xe 12 tháng (số liệu tạm). Gọi {phone} để được báo giá chính xác.'],
+        ],
+        'sources' => [['label' => 'Trang xe Kumatsu Benly (xedienkumatsu.com)', 'url' => 'https://xedienkumatsu.com/benly-tr.html']],
+        'fetched_on' => FETCHED_ON,
+    ],
+];
+
+// ------------------------------------------------------------------ KUMATSU BENLY VC
+$products[] = [
+    'category' => 'xe-may-dien',
+    'name' => 'Kumatsu Benly VC',
+    'slug' => 'kumatsu-benly-vc',
+    'code' => 'KM-BENLY-VC',
+    'image' => 'uploads/products/kumatsu-benly-vc.jpg',
+    'description' => 'Xe máy điện Kumatsu Benly VC: động cơ VS48V500WB, ắc quy 48V/20Ah, đi khoảng 60–80 km mỗi lần sạc, tốc độ tối đa 40–50 km/h.',
+    'max_speed' => 50,
+    'battery_range' => 60,
+    'motor_power' => '500W',
+    'warranty_months' => 12,
+    'details' => [
+        'brand' => 'Kumatsu',
+        'variants' => [
+            ['name' => 'Benly VC (động cơ VS48V500WB)', 'price' => null, 'price_text' => '≈ 16.900.000 ₫ (giá tạm)', 'colors' => COLORS_BENLY, 'note' => 'Hãng bán các màu đen, xanh, đỏ…'],
+        ],
+        'battery' => [
+            'type' => 'Ắc quy (tạm)',
+            'voltage_capacity' => '48V / 20Ah',
+            'range' => '60–80 km mỗi lần sạc',
+            'charge_time' => '6–10 giờ (tạm)',
+            'warranty' => '6 tháng (tạm)',
+        ],
+        'spec_groups' => [
+            ['title' => 'Động cơ & vận hành', 'rows' => [
+                ['Động cơ', 'VS48V500WB (500W)'],
+                ['Điện áp / dung lượng', '48V / 20Ah'],
+                ['Bộ điều khiển', 'GOBAO 25A'],
+                ['Cách thao tác', 'Tự động'],
+                ['Quãng đường di chuyển', '60–80 km / lần sạc'],
+                ['Vận tốc tối đa', '40–50 km/h'],
+                ['Điện áp bảo vệ', '42V ±1'],
+                ['Dòng điện bảo vệ', '25A ±1'],
+            ]],
+            ['title' => 'Kích thước & trọng lượng', 'rows' => [
+                ['Dài × rộng × cao', '1.670 × 680 × 1.075 mm'],
+                ['Chiều dài cơ sở', '1.210 mm'],
+                ['Khối lượng bản thân', '74 kg'],
+                ['Khối lượng toàn bộ', '149 kg'],
+                ['Số người được chở', '1 người'],
+            ]],
+            ['title' => 'Khung gầm', 'rows' => [
+                ['Lốp trước / sau', '3.00-10'],
+            ]],
+            ['title' => 'Chứng nhận & xuất xứ', 'rows' => [
+                ['Nhãn hiệu / số loại', 'KUMATSU/BENLY VC'],
+                ['Xuất xứ', 'Việt Nam và liên doanh'],
+                ['Nhà sản xuất', 'Công ty TNHH TM và DV Việt Quang'],
+                ['Số chứng nhận', '10019/NVICC06-01/26-00'],
+            ]],
+        ],
+        'features_note' => 'Tính năng tham khảo theo dòng Benly (tạm), sẽ cập nhật khi có thông tin riêng của Benly VC.',
+        'features' => [
+            ['icon' => 'tune', 'title' => '3 chế độ lái', 'text' => 'Chọn Eco, Normal hoặc Sport theo điều kiện di chuyển.'],
+            ['icon' => 'key', 'title' => 'Chìa khóa thông minh', 'text' => 'Khóa, mở xe và tìm xe từ xa.'],
+            ['icon' => 'lock', 'title' => 'Chế độ chống trộm', 'text' => 'Cảnh báo khi xe bị tác động bất thường.'],
+            ['icon' => 'speed', 'title' => 'Màn hình LCD điện tử', 'text' => 'Xem tốc độ, lượng pin và quãng đường ngay trên xe.'],
+            ['icon' => 'lightbulb', 'title' => 'Đèn LED tiết kiệm điện', 'text' => 'Đèn pha, đèn hậu và xi nhan chiếu sáng rõ.'],
+            ['icon' => 'health_and_safety', 'title' => 'Phanh đĩa trước và sau', 'text' => 'Tăng độ an toàn khi phanh gấp.'],
+        ],
+        'warranty' => [
+            'summary' => 'Thời hạn bảo hành dưới đây là số liệu tạm, sẽ được xác nhận khi báo giá. Gọi {phone} để biết chính xác.',
+            'items' => [
+                ['Bảo hành xe', '12 tháng (tạm)'],
+                ['Bảo hành ắc quy / pin', '6 tháng (tạm)'],
+                ['Bảo hành động cơ', '12 tháng (tạm)'],
+            ],
+            'aftersales' => [
+                'Nhà sản xuất: Công ty TNHH TM và DV Việt Quang. Hotline hãng 0966053077.',
+                'Mua và bảo dưỡng tại Tiệp Anh: gọi {phone} hoặc đến {address}.',
+            ],
+        ],
+        'faq' => [
+            ['q' => 'Xe đi được bao xa sau mỗi lần sạc?', 'a' => 'Hãng công bố khoảng 60–80 km mỗi lần sạc.'],
+            ['q' => 'Tốc độ tối đa là bao nhiêu?', 'a' => 'Từ 40 đến 50 km/h theo công bố của hãng.'],
+            ['q' => 'Xe nặng bao nhiêu, chở được mấy người?', 'a' => 'Khối lượng bản thân 74 kg, khối lượng toàn bộ 149 kg. Xe cho phép chở 1 người.'],
+            ['q' => 'Xe có những màu nào?', 'a' => 'Hãng bán các màu đen, xanh, đỏ… Gọi {phone} để biết màu còn hàng.'],
+            ['q' => 'Giá bán và thời gian bảo hành là bao nhiêu?', 'a' => 'Giá tạm khoảng 16,9 triệu đồng, bảo hành xe 12 tháng (số liệu tạm). Gọi {phone} để được báo giá chính xác.'],
+        ],
+        'sources' => [['label' => 'Trang xe Kumatsu Benly VC (xedienkumatsu.com)', 'url' => 'https://xedienkumatsu.com/benly-vc-xam-mo.html']],
+        'fetched_on' => FETCHED_ON,
+    ],
+];
+
+// ------------------------------------------------------------------ KUMATSU VQ8
+$products[] = [
+    'category' => 'xe-may-dien',
+    'name' => 'Kumatsu VQ8',
+    'slug' => 'kumatsu-vq8',
+    'code' => 'KM-VQ8',
+    'image' => 'uploads/products/kumatsu-vq8.jpg',
+    'description' => 'Xe máy điện Kumatsu VQ8: động cơ 1000W không chổi than, hệ thống 60V, đi khoảng 60–80 km mỗi lần sạc, 3 chế độ tốc độ, mở khóa bằng chìa, remote hoặc thẻ NFC.',
+    'max_speed' => 46,
+    'battery_range' => 60,
+    'motor_power' => '1000W',
+    'warranty_months' => 12,
+    'details' => [
+        'brand' => 'Kumatsu',
+        'variants' => [
+            ['name' => 'VQ8 ắc quy chì axit (5 × 12V-20Ah)', 'price' => null, 'price_text' => '≈ 19.900.000 ₫ (giá tạm)', 'colors' => ['Đen', 'Xanh', 'Đỏ', 'Cam'], 'note' => 'Hãng ghi: đỏ đen, xanh dương, xám xi măng, cam xám…'],
+            ['name' => 'VQ8 pin Lithium (tùy bản)', 'price' => null, 'price_text' => '≈ 24.900.000 ₫ (giá tạm)', 'colors' => ['Đen', 'Xanh', 'Đỏ', 'Cam'], 'note' => 'Bản pin Lithium: hỏi cửa hàng về bản đang có.'],
+        ],
+        'battery' => [
+            'type' => 'Ắc quy chì axit 5 × 12V-20Ah hoặc pin Lithium (tùy bản)',
+            'voltage_capacity' => '60V',
+            'range' => '60–80 km mỗi lần sạc',
+            'charge_time' => '8–10 giờ (ắc quy) hoặc 4–6 giờ (pin Lithium)',
+            'warranty' => 'Ắc quy 6 tháng, pin Lithium 12 tháng (tạm)',
+        ],
+        'spec_groups' => [
+            ['title' => 'Động cơ & vận hành', 'rows' => [
+                ['Động cơ', '1000W, không chổi than, chống nước IP67'],
+                ['Công suất lớn nhất', '1,5 kW'],
+                ['Bộ điều khiển (IC)', '30A, nhôm đúc, VS/60V12G'],
+                ['Chế độ lái (tốc độ)', 'Mức 1: 32 km/h · Mức 2: 40 km/h · Mức 3: 46 km/h'],
+                ['Tốc độ hãng công bố', 'Lên đến 50–55 km/h'],
+                ['Quãng đường di chuyển', '60–80 km / lần sạc'],
+            ]],
+            ['title' => 'Kích thước & trọng lượng', 'rows' => [
+                ['Dài × rộng × cao', '1.780 × 735 × 1.140 mm'],
+                ['Chiều dài cơ sở', '1.285 mm'],
+                ['Khối lượng bản thân', '95 kg'],
+                ['Khả năng chở nặng', '225 kg'],
+                ['Số người được chở', '1 người'],
+            ]],
+            ['title' => 'Khung gầm', 'rows' => [
+                ['Lốp trước / sau', '3.50-10 KENDA'],
+                ['Phanh', 'Trước đĩa, sau tang trống'],
+                ['Giảm xóc', 'Dầu thủy lực trước và sau'],
+                ['Khung sườn', 'Thép chịu lực'],
+            ]],
+            ['title' => 'Điện & tiện ích', 'rows' => [
+                ['Hệ thống đèn', 'LED hoàn toàn (đèn pha, xi nhan)'],
+                ['Cách khởi động', 'Chìa khóa cơ, remote từ xa, thẻ NFC gần'],
+                ['Màn hình', 'LCD điện tử: tốc độ, pin, đèn báo, báo lỗi'],
+                ['Cốp xe', 'Đựng vừa mũ bảo hiểm nửa đầu và đồ cá nhân'],
+            ]],
+            ['title' => 'Xuất xứ', 'rows' => [
+                ['Nhãn hiệu / số loại', 'KUMATSU/VQ8'],
+                ['Xuất xứ', 'Việt Nam và liên doanh'],
+                ['Nhà sản xuất', 'Công ty TNHH TM và DV Việt Quang'],
+            ]],
+        ],
+        'features' => [
+            ['icon' => 'electric_bolt', 'title' => 'Động cơ 1000W', 'text' => 'Động cơ không chổi than, vận hành êm và bền.'],
+            ['icon' => 'key', 'title' => 'Mở khóa 3 cách', 'text' => 'Dùng chìa khóa cơ, remote hoặc thẻ NFC.'],
+            ['icon' => 'speed', 'title' => '3 mức tốc độ', 'text' => 'Chọn 32, 40 hoặc 46 km/h tùy đường đi.'],
+            ['icon' => 'monitor', 'title' => 'Màn hình LCD điện tử', 'text' => 'Xem tốc độ, pin, đèn báo và lỗi ngay trên xe.'],
+            ['icon' => 'water_drop', 'title' => 'Chống nước IP67', 'text' => 'Hãng nêu bảo vệ chống nước, chống chập.'],
+            ['icon' => 'inventory_2', 'title' => 'Cốp xe rộng', 'text' => 'Đựng vừa mũ bảo hiểm nửa đầu và đồ cá nhân.'],
+        ],
+        'warranty' => [
+            'summary' => 'Thời hạn bảo hành dưới đây là số liệu tạm, sẽ được xác nhận khi báo giá. Gọi {phone} để biết chính xác.',
+            'items' => [
+                ['Bảo hành xe', '12 tháng (tạm)'],
+                ['Bảo hành ắc quy / pin', '6 tháng (tạm)'],
+                ['Bảo hành động cơ', '12 tháng (tạm)'],
+            ],
+            'aftersales' => [
+                'Nhà sản xuất: Công ty TNHH TM và DV Việt Quang. Hotline hãng 0966053077.',
+                'Mua và bảo dưỡng tại Tiệp Anh: gọi {phone} hoặc đến {address}.',
+            ],
+        ],
+        'faq' => [
+            ['q' => 'Xe đi được bao xa sau mỗi lần sạc?', 'a' => 'Hãng công bố khoảng 60–80 km mỗi lần sạc.'],
+            ['q' => 'Sạc đầy mất bao lâu?', 'a' => 'Khoảng 8–10 giờ với ắc quy, 4–6 giờ với pin Lithium.'],
+            ['q' => 'Xe dùng ắc quy hay pin Lithium?', 'a' => 'Tùy bản: ắc quy chì axit 5 × 12V-20Ah hoặc pin Lithium. Gọi {phone} để biết bản đang có.'],
+            ['q' => 'Xe chở được mấy người, tải trọng bao nhiêu?', 'a' => 'Xe cho phép chở 1 người, khả năng chở nặng 225 kg.'],
+            ['q' => 'Giá bán và thời gian bảo hành là bao nhiêu?', 'a' => 'Giá tạm khoảng 19,9 triệu đồng (bản ắc quy) và 24,9 triệu đồng (bản pin Lithium), bảo hành xe 12 tháng (số liệu tạm). Gọi {phone} để được báo giá chính xác.'],
+        ],
+        'sources' => [['label' => 'Trang xe Kumatsu VQ8 (xedienkumatsu.com)', 'url' => 'https://xedienkumatsu.com/kumatsuvq8-xam-mo.html']],
+        'fetched_on' => FETCHED_ON,
+    ],
+];
+
+// ------------------------------------------------------------------ SONCO LYN
+$products[] = [
+    'category' => 'xe-dap-dien',
+    'name' => 'Sonco Lyn',
+    'slug' => 'sonco-lyn',
+    'code' => 'SC-LYN',
+    'image' => 'uploads/products/sonco-lyn.jpg',
+    'description' => 'Xe điện Sonco Lyn: động cơ 800W, hệ thống 60V (5 ắc quy 12V-20Ah), đi khoảng 70–80 km mỗi lần sạc, tốc độ tối đa 45–48 km/h, cốp xe 20 lít, kết nối ứng dụng Bluetooth.',
+    'max_speed' => 48,
+    'battery_range' => 70,
+    'motor_power' => '800W',
+    'warranty_months' => 12,
+    'details' => [
+        'brand' => 'Sonco',
+        'variants' => [
+            ['name' => 'Sonco Lyn (800W, 60V)', 'price' => null, 'price_text' => '12.990.000 ₫ (giá tham khảo của nhà phân phối)', 'colors' => ['Xám bóng', 'Đỏ đô', 'Trắng'], 'note' => 'Màu tạm, hỏi cửa hàng màu còn hàng.'],
+        ],
+        'battery' => [
+            'type' => 'Ắc quy 5 bình 12V-20Ah',
+            'voltage_capacity' => '60V (5 × 12V-20Ah)',
+            'range' => '70–80 km mỗi lần sạc (tùy điều kiện vận hành)',
+            'charge_time' => '6–8 giờ (tạm)',
+            'warranty' => '12 tháng (lỗi đổi mới) — theo nhà phân phối nguồn, tham khảo',
+        ],
+        'spec_groups' => [
+            ['title' => 'Động cơ & vận hành', 'rows' => [
+                ['Động cơ', '800W'],
+                ['Tốc độ tối đa', '45–48 km/h'],
+                ['Quãng đường mỗi lần sạc', '70–80 km (tùy điều kiện vận hành)'],
+            ]],
+            ['title' => 'Pin & điện', 'rows' => [
+                ['Ắc quy', '5 bình 12V-20Ah (tổng 60V)'],
+            ]],
+            ['title' => 'Khung gầm', 'rows' => [
+                ['Phanh trước', 'Đĩa thủy lực'],
+                ['Phanh sau', 'Cơ (tang trống)'],
+                ['Giảm xóc', 'Phuộc thủy lực trước, lò xo đôi sau'],
+                ['Lốp', 'Không săm 3.00-10'],
+            ]],
+            ['title' => 'Kích thước & tiện ích', 'rows' => [
+                ['Trọng lượng', 'Khoảng 45 kg'],
+                ['Chiều cao yên', 'Khoảng 700 mm'],
+                ['Cốp xe', '20 lít'],
+                ['Khóa', 'Khóa chống trộm thông minh'],
+                ['Màn hình', 'LCD màu'],
+                ['Ứng dụng', 'Bluetooth: khởi động không chìa, chống trộm, giới hạn tốc độ'],
+            ]],
+        ],
+        'features' => [
+            ['icon' => 'smartphone', 'title' => 'Kết nối ứng dụng Bluetooth', 'text' => 'Khởi động không chìa, chống trộm và giới hạn tốc độ.'],
+            ['icon' => 'inventory_2', 'title' => 'Cốp xe 20 lít', 'text' => 'Có chỗ để đồ dùng cá nhân khi đi học, đi làm.'],
+            ['icon' => 'health_and_safety', 'title' => 'Phanh kép', 'text' => 'Phanh đĩa trước và phanh cơ sau để dừng xe an toàn.'],
+            ['icon' => 'monitor', 'title' => 'Màn hình LCD màu', 'text' => 'Theo dõi thông tin vận hành rõ ràng.'],
+            ['icon' => 'lock', 'title' => 'Khóa chống trộm thông minh', 'text' => 'Tăng an toàn khi gửi xe.'],
+            ['icon' => 'speed', 'title' => 'Giới hạn tốc độ', 'text' => 'Phù hợp người mới đi, học sinh (theo nhà phân phối nguồn).'],
+        ],
+        'warranty' => [
+            'summary' => 'Theo nhà phân phối nguồn (tham khảo): động cơ 2 năm, ắc quy 1 năm (lỗi đổi mới). Chính sách của Tiệp Anh sẽ được xác nhận khi báo giá.',
+            'items' => [
+                ['Bảo hành động cơ', '24 tháng (tham khảo)'],
+                ['Bảo hành ắc quy', '12 tháng, lỗi đổi mới (tham khảo)'],
+                ['Bảo hành khung', '12 tháng (tạm)'],
+            ],
+            'aftersales' => [
+                'Hãng chưa có trang chính thức truy cập được, thông số lấy từ nhà phân phối: cần đối chiếu với xe thực tế.',
+                'Mua và bảo dưỡng tại Tiệp Anh: gọi {phone} hoặc đến {address}.',
+            ],
+        ],
+        'faq' => [
+            ['q' => 'Xe đi được bao xa sau mỗi lần sạc?', 'a' => 'Khoảng 70–80 km, tùy điều kiện vận hành.'],
+            ['q' => 'Tốc độ tối đa là bao nhiêu?', 'a' => 'Từ 45 đến 48 km/h.'],
+            ['q' => 'Xe dùng pin hay ắc quy?', 'a' => 'Xe dùng 5 bình ắc quy 12V-20Ah, tổng điện áp 60V.'],
+            ['q' => 'Xe có cốp để đồ không?', 'a' => 'Có, cốp xe dung tích khoảng 20 lít.'],
+            ['q' => 'Giá bán và thời gian sạc là bao nhiêu?', 'a' => 'Giá tham khảo từ 12.990.000 ₫, sạc đầy khoảng 6–8 giờ (số liệu tạm). Gọi {phone} để được báo giá chính xác.'],
+        ],
+        'sources' => [['label' => 'Xe đạp điện Sonco Lyn (xediennangtho.com)', 'url' => 'https://xediennangtho.com/xe-dap-dien-sonco-lyn/']],
+        'fetched_on' => FETCHED_ON,
+    ],
+];
+
+// ------------------------------------------------------------------ SONCO LYN V3 946
+$products[] = [
+    'category' => 'xe-dap-dien',
+    'name' => 'Sonco Lyn V3 946',
+    'slug' => 'sonco-lyn-v3-946',
+    'code' => 'SC-LYN-V3-946',
+    'image' => 'uploads/products/sonco-lyn-v3-946.jpg',
+    'description' => 'Xe điện Sonco Lyn V3 946 kiểu dáng nhỏ gọn, đi khoảng 60–70 km mỗi lần sạc, tốc độ 30–45 km/h, cốp xe 17 lít, phanh đĩa trước.',
+    'max_speed' => 45,
+    'battery_range' => 60,
+    'motor_power' => '240–500W',
+    'warranty_months' => 12,
+    'details' => [
+        'brand' => 'Sonco',
+        'variants' => [
+            ['name' => 'Sonco Lyn V3 946', 'price' => null, 'price_text' => '14.500.000 ₫ (giá tham khảo của nhà phân phối)', 'colors' => ['Trắng hồng', 'Trắng', 'Đen'], 'note' => 'Màu tạm, hỏi cửa hàng màu còn hàng.'],
+        ],
+        'battery' => [
+            'type' => 'Ắc quy 5 bình (48V-20Ah hoặc tương đương)',
+            'voltage_capacity' => '48V-20Ah hoặc tương đương',
+            'range' => 'Khoảng 60–70 km mỗi lần sạc',
+            'charge_time' => '8–10 giờ',
+            'warranty' => '6 tháng (tạm)',
+        ],
+        'spec_groups' => [
+            ['title' => 'Động cơ & vận hành', 'rows' => [
+                ['Động cơ', '3 pha một chiều không chổi than, khoảng 240–500W'],
+                ['Tốc độ tối đa', '30–45 km/h'],
+                ['Quãng đường mỗi lần sạc', 'Khoảng 60–70 km'],
+                ['Thời gian sạc', '8–10 giờ'],
+            ]],
+            ['title' => 'Pin & điện', 'rows' => [
+                ['Ắc quy', '5 bình lớn (48V-20Ah hoặc tương đương)'],
+            ]],
+            ['title' => 'Khung gầm', 'rows' => [
+                ['Phanh', 'Đĩa trước, cơ sau'],
+                ['Lốp', 'Không săm 2.75-10'],
+            ]],
+            ['title' => 'Kích thước & tiện ích', 'rows' => [
+                ['Trọng lượng xe', '65–70 kg'],
+                ['Tải trọng', 'Khoảng 150 kg'],
+                ['Cốp xe', '17 lít'],
+                ['Đồng hồ', 'Điện tử'],
+                ['Đèn', 'LED siêu sáng'],
+                ['Khóa', 'Khóa từ'],
+                ['Thiết kế', 'Nhỏ gọn, phong cách Vespa 946'],
+            ]],
+        ],
+        'features' => [
+            ['icon' => 'inventory_2', 'title' => 'Cốp xe 17 lít', 'text' => 'Để vừa đồ dùng cá nhân hằng ngày.'],
+            ['icon' => 'lightbulb', 'title' => 'Đèn LED siêu sáng', 'text' => 'Chiếu sáng rõ khi đi buổi tối.'],
+            ['icon' => 'monitor', 'title' => 'Đồng hồ điện tử', 'text' => 'Theo dõi thông tin vận hành dễ dàng.'],
+            ['icon' => 'lock', 'title' => 'Khóa từ', 'text' => 'Mở và khóa xe nhanh gọn.'],
+            ['icon' => 'health_and_safety', 'title' => 'Phanh đĩa trước', 'text' => 'Kết hợp phanh cơ sau để dừng xe ổn định.'],
+            ['icon' => 'directions_bike', 'title' => 'Thiết kế nhỏ gọn', 'text' => 'Kiểu dáng trẻ trung, dễ điều khiển.'],
+        ],
+        'warranty' => [
+            'summary' => 'Theo nhà phân phối nguồn (tham khảo): bảo hành 12 tháng tại nhà. Chính sách của Tiệp Anh sẽ được xác nhận khi báo giá.',
+            'items' => [
+                ['Bảo hành xe', '12 tháng tại nhà (tham khảo)'],
+                ['Bảo hành ắc quy', '6 tháng (tạm)'],
+                ['Bảo hành động cơ', '12 tháng (tạm)'],
+            ],
+            'aftersales' => [
+                'Thông số lấy từ nhà phân phối, cần đối chiếu với xe thực tế.',
+                'Mua và bảo dưỡng tại Tiệp Anh: gọi {phone} hoặc đến {address}.',
+            ],
+        ],
+        'faq' => [
+            ['q' => 'Xe đi được bao xa sau mỗi lần sạc?', 'a' => 'Khoảng 60–70 km.'],
+            ['q' => 'Sạc đầy mất bao lâu?', 'a' => 'Khoảng 8–10 giờ.'],
+            ['q' => 'Xe chở được tối đa bao nhiêu kg?', 'a' => 'Tải trọng khoảng 150 kg.'],
+            ['q' => 'Xe có cốp để đồ không?', 'a' => 'Có, cốp xe dung tích khoảng 17 lít.'],
+            ['q' => 'Giá bán và bảo hành tại Tiệp Anh?', 'a' => 'Giá tham khảo khoảng 14.500.000 ₫, bảo hành 12 tháng (số liệu tạm). Gọi {phone} để được báo giá chính xác.'],
+        ],
+        'sources' => [['label' => 'Xe điện Sonco Lyn V3 946 (thegioixechaydien.com.vn)', 'url' => 'https://thegioixechaydien.com.vn/xe-dien-sonco-lyn-v3-946.html']],
+        'fetched_on' => FETCHED_ON,
+    ],
+];
+
+// ------------------------------------------------------------------ Ghi dữ liệu
+$emitSql = in_array('--sql', $argv, true);
+$json = static fn(array $data): string => json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION);
+
+if ($emitSql) {
+    $quote = static fn(?string $v): string => $v === null ? 'NULL' : "'" . str_replace(["\\", "'"], ["\\\\", "''"], $v) . "'";
+    echo "-- Sản phẩm KUMATSU và SONCO (nguồn trong cột details). Sinh bởi database/seed_brand_products.php\n";
+    echo "-- Import sau 002_product_details.sql. Chạy lại an toàn (cập nhật theo product_code).\n\nSET NAMES utf8mb4;\n\n";
+
+    foreach ($products as $p) {
+        $values = [
+            'category_id' => "(SELECT id FROM categories WHERE slug = " . $quote($p['category']) . " LIMIT 1)",
+            'name' => $quote($p['name']),
+            'slug' => $quote($p['slug']),
+            'product_code' => $quote($p['code']),
+            'price' => '0.00',
+            'sale_price' => 'NULL',
+            'image' => $quote($p['image']),
+            'description' => $quote($p['description']),
+            'details' => $quote($json($p['details'])),
+            'max_speed' => (string)$p['max_speed'],
+            'battery_range' => (string)$p['battery_range'],
+            'motor_power' => $quote($p['motor_power']),
+            'warranty_months' => (string)$p['warranty_months'],
+            'stock' => '0',
+            'status' => "'out_of_stock'",  // chưa có tồn kho thật: trang hiển thị "đang cập nhật"
+        ];
+        $updates = [];
+        foreach (array_diff(array_keys($values), ['slug', 'product_code', 'price', 'stock', 'status']) as $column) {
+            $updates[] = "`$column` = VALUES(`$column`)";
+        }
+        echo 'INSERT INTO `products` (`' . implode('`, `', array_keys($values)) . "`) VALUES\n  ("
+            . implode(', ', $values) . ")\nON DUPLICATE KEY UPDATE " . implode(', ', $updates) . ";\n\n";
+    }
+
+    exit;
+}
+
+require_once __DIR__ . '/../config/database.php';
+
+$categoryId = static function (PDO $pdo, string $slug): int {
+    $statement = $pdo->prepare('SELECT id FROM categories WHERE slug = :slug LIMIT 1');
+    $statement->execute(['slug' => $slug]);
+    $id = $statement->fetchColumn();
+
+    if ($id === false) {
+        fwrite(STDERR, "Không có danh mục '$slug'. Hãy import database/catalog_seed.sql trước.\n");
+        exit(1);
+    }
+
+    return (int)$id;
+};
+
+$upsert = $pdo->prepare('
+    INSERT INTO products
+        (category_id, name, slug, product_code, price, sale_price, image, description, details,
+         max_speed, battery_range, motor_power, warranty_months, stock, status)
+    VALUES
+        (:category_id, :name, :slug, :product_code, 0, NULL, :image, :description, :details,
+         :max_speed, :battery_range, :motor_power, :warranty_months, 0, \'out_of_stock\')
+    ON DUPLICATE KEY UPDATE
+        category_id = VALUES(category_id), name = VALUES(name), image = VALUES(image),
+        description = VALUES(description), details = VALUES(details), max_speed = VALUES(max_speed),
+        battery_range = VALUES(battery_range), motor_power = VALUES(motor_power),
+        warranty_months = VALUES(warranty_months)
+');
+
+foreach ($products as $p) {
+    $upsert->execute([
+        'category_id' => $categoryId($pdo, $p['category']),
+        'name' => $p['name'],
+        'slug' => $p['slug'],
+        'product_code' => $p['code'],
+        'image' => $p['image'],
+        'description' => $p['description'],
+        'details' => $json($p['details']),
+        'max_speed' => $p['max_speed'],
+        'battery_range' => $p['battery_range'],
+        'motor_power' => $p['motor_power'],
+        'warranty_months' => $p['warranty_months'],
+    ]);
+    echo "Đã lưu: {$p['name']} ({$p['code']})\n";
+}

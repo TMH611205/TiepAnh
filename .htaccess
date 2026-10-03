@@ -1,0 +1,12 @@
+# Chặn truy cập trực tiếp vào mã nguồn, cấu hình, dữ liệu (Apache + mod_rewrite)
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule "^(config|database|models|controllers|middleware|services|storage|views|vendor|.claude|bản mẫu)(/|$)" - [F,L]
+    RewriteRule ^(\.env.*|\.git.*|CLAUDE\.md|composer\.(json|lock))$ - [F,L]
+</IfModule>
+
+<FilesMatch "\.(sql|log|md|env)$">
+    Require all denied
+</FilesMatch>

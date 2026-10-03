@@ -1,0 +1,23 @@
+# Bí mật & cấu hình máy
+.env
+
+# Log, hóa đơn sinh ra khi chạy (giữ thư mục bằng .gitkeep)
+storage/logs/*
+storage/invoices/*
+!storage/logs/.gitkeep
+!storage/invoices/.gitkeep
+
+# Ảnh người dùng tải lên sau này (ảnh mẫu trong uploads/products được giữ)
+uploads/*
+!uploads/products/
+!uploads/.htaccess
+
+# Hệ điều hành / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Thư viện Composer (cài lại bằng: composer install)
+vendor/
