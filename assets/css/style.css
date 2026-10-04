@@ -167,7 +167,7 @@ input {
 
 .brand-logo {
   display: block;
-  height: 44px;
+  height: 57px; /* 44px x 1.3 */
   width: auto;
 }
 
@@ -6315,4 +6315,516 @@ li {
   .pd-nav {
     scroll-behavior: auto;
   }
+}
+
+/* =====================================================
+   HIỆU ỨNG HOVER NÚT + ANIMATION BỔ SUNG
+   (đặt cuối file để ghi đè các kiểu hover cũ)
+===================================================== */
+
+:root {
+  --hover-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --hover-accent: #00913c;
+  --hover-accent-dark: #003d16;
+}
+
+/* ---------- Nút đặc: nổi lên + đổi màu ---------- */
+
+.btn-primary-custom,
+.btn-add-cart,
+.btn-buy-now,
+.auth-submit,
+.detail-btn,
+.primary-btn,
+.purchase-button,
+.promotion-button,
+.catalog-filter-submit,
+.catalog-product-actions button,
+.np-button,
+.test-drive-button,
+.cart-button {
+  position: relative;
+  transition:
+    transform 0.25s var(--hover-ease),
+    box-shadow 0.25s var(--hover-ease),
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.btn-primary-custom:hover,
+.btn-add-cart:hover,
+.btn-buy-now:hover,
+.auth-submit:hover,
+.detail-btn:hover,
+.primary-btn:hover,
+.purchase-button:hover,
+.promotion-button:hover,
+.catalog-filter-submit:hover,
+.catalog-product-actions button:hover,
+.np-button:hover,
+.test-drive-button:hover,
+.cart-button:hover {
+  color: #ffffff;
+  background: var(--hover-accent);
+  border-color: var(--hover-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 107, 44, 0.32);
+}
+
+/* ---------- Nút viền / phụ: đổ màu khi hover ---------- */
+
+.btn-outline-custom,
+.secondary-button,
+.detail-compare-button,
+.catalog-hero-link,
+.np-button-ghost,
+.compare-product-button,
+.np-topics a,
+.product-category-tabs a {
+  transition:
+    transform 0.25s var(--hover-ease),
+    box-shadow 0.25s var(--hover-ease),
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.btn-outline-custom:hover,
+.secondary-button:hover,
+.detail-compare-button:hover,
+.catalog-hero-link:hover,
+.np-button-ghost:hover,
+.compare-product-button:hover,
+.np-topics a:hover,
+.product-category-tabs a:hover {
+  color: #ffffff;
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 107, 44, 0.25);
+}
+
+/* ---------- Nút nhỏ / icon ---------- */
+
+.footer-social a,
+.mobile-menu-button,
+.floating-contact-button,
+.admin-button {
+  transition:
+    transform 0.25s var(--hover-ease),
+    box-shadow 0.25s var(--hover-ease),
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.footer-social a:hover,
+.mobile-menu-button:hover,
+.floating-contact-button:hover,
+.admin-button:hover {
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
+}
+
+.admin-button.danger:hover {
+  background: #8f1212;
+}
+
+/* Nhấn xuống khi click */
+.btn-primary-custom:active,
+.btn-outline-custom:active,
+.btn-add-cart:active,
+.btn-buy-now:active,
+.purchase-button:active,
+.secondary-button:active,
+.promotion-button:active,
+.np-button:active,
+.admin-button:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: none;
+}
+
+/* ---------- Thẻ nổi lên khi hover ---------- */
+
+.category-card,
+.why-card,
+.promotion-card,
+.catalog-product-card,
+.np-card {
+  transition:
+    transform 0.3s var(--hover-ease),
+    box-shadow 0.3s var(--hover-ease),
+    border-color 0.3s ease;
+}
+
+.category-card:hover,
+.why-card:hover,
+.promotion-card:hover,
+.catalog-product-card:hover,
+.np-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 36px rgba(0, 107, 44, 0.18);
+  border-color: var(--primary-light);
+}
+
+/* ---------- Liên kết menu: gạch chân chạy ---------- */
+
+.desktop-menu a {
+  position: relative;
+}
+
+.desktop-menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--hover-ease);
+}
+
+.desktop-menu a:hover::after {
+  transform: scaleX(1);
+}
+
+/* ---------- Animation khi tải trang ---------- */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 145, 60, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(0, 145, 60, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 145, 60, 0);
+  }
+}
+
+.hero-badge,
+.hero-title,
+.hero-section h1 {
+  animation: fadeUp 0.8s var(--hover-ease) both;
+}
+
+.hero-buttons {
+  animation: fadeUp 0.8s var(--hover-ease) 0.25s both;
+}
+
+.hero-image-wrapper {
+  animation: fadeUp 0.9s var(--hover-ease) 0.2s both;
+}
+
+.hero-image {
+  animation: floatY 6s ease-in-out 1s infinite;
+}
+
+.hero-image-wrapper:hover .hero-image {
+  animation-play-state: paused;
+}
+
+.floating-contact-button {
+  animation: pulseRing 2.4s ease-out infinite;
+}
+
+.floating-contact-button:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-badge,
+  .hero-title,
+  .hero-section h1,
+  .hero-buttons,
+  .hero-image-wrapper,
+  .hero-image,
+  .floating-contact-button {
+    animation: none;
+  }
+
+  .category-card:hover,
+  .why-card:hover,
+  .promotion-card:hover,
+  .catalog-product-card:hover,
+  .np-card:hover,
+  .btn-primary-custom:hover,
+  .btn-outline-custom:hover {
+    transform: none;
+  }
+}
+/* =====================================================
+   HERO SLIDER (bên phải) – SẢN PHẨM, GIÁ VÀ ƯU ĐÃI
+===================================================== */
+
+.hero-slider {
+  position: relative;
+  animation: fadeUp 0.9s var(--hover-ease) 0.2s both;
+}
+
+.hero-slider-viewport {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: 0 18px 40px rgba(0, 107, 44, 0.15);
+}
+
+.hero-slider-track {
+  display: flex;
+  transition: transform 0.7s var(--hover-ease);
+  will-change: transform;
+}
+
+.hero-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero-slide-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--surface-low);
+  overflow: hidden;
+}
+
+.hero-slide-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.5s var(--hover-ease);
+}
+
+.hero-slide:hover .hero-slide-media img {
+  transform: scale(1.06);
+}
+
+.hero-slide-discount {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: #ba1a1a;
+  color: #fff;
+  font-weight: 800;
+  font-size: 17px;
+  box-shadow: 0 8px 18px rgba(186, 26, 26, 0.35);
+}
+
+.hero-slide-info {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px 22px;
+}
+
+.hero-slide-text {
+  min-width: 0;
+}
+
+.hero-slide-text h3 {
+  margin: 8px 0 4px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.hero-slide-text p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.hero-slide-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--secondary-light);
+  color: var(--primary-dark);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.hero-slide-tag.is-sale {
+  background: #ba1a1a;
+  color: #fff;
+  animation: pulseRing 2.4s ease-out infinite;
+}
+
+.hero-slide-price {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.hero-slide-price small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.hero-slide-price strong {
+  display: block;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.hero-slide-price del {
+  color: var(--outline);
+  font-size: 14px;
+}
+
+.hero-slider-arrow {
+  position: absolute;
+  top: 38%;
+  z-index: 3;
+  width: 42px;
+  height: 42px;
+  margin-top: -21px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  transition:
+    transform 0.25s var(--hover-ease),
+    background-color 0.25s,
+    color 0.25s;
+}
+
+.hero-slider-arrow.prev {
+  left: 10px;
+}
+.hero-slider-arrow.next {
+  right: 10px;
+}
+
+.hero-slider-arrow:hover {
+  background: var(--hover-accent);
+  color: #fff;
+  transform: translateY(-4px) scale(1.08);
+}
+
+.hero-slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.hero-slider-dots button {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--border);
+  cursor: pointer;
+  transition:
+    width 0.3s var(--hover-ease),
+    background-color 0.25s;
+}
+
+.hero-slider-dots button:hover {
+  background: var(--hover-accent);
+}
+
+.hero-slider-dots button.is-active {
+  width: 30px;
+  background: var(--primary);
+}
+
+@media (max-width: 575px) {
+  .hero-slide-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-slide-price {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slider,
+  .hero-slide-tag.is-sale {
+    animation: none;
+  }
+
+  .hero-slider-track {
+    transition: none;
+  }
+}
+
+/* Mục menu đang mở: đổi màu + gạch chân cố định */
+.desktop-menu a.active {
+  color: var(--hover-accent);
+  border-bottom-color: transparent;
+}
+
+.desktop-menu a.active::after {
+  transform: scaleX(1);
+  background: var(--hover-accent);
+}
+
+/* Thông báo form liên hệ */
+.contact-alert {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  animation: fadeUp 0.5s var(--hover-ease) both;
+}
+.contact-alert.success {
+  background: #e6f8ec;
+  color: #005320;
+  border: 1px solid #62df7d;
+}
+.contact-alert.error {
+  background: #ffe9e9;
+  color: #ba1a1a;
+  border: 1px solid #f3a6a6;
 }

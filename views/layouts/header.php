@@ -11,6 +11,20 @@ $pageTitle = $pageTitle ?? 'Trang chủ';
 
 $cartCount = $_SESSION['cart_count'] ?? 0;
 
+// Xác định mục menu đang mở để gạch chân và đổi màu.
+$currentFile = basename((string)parse_url((string)($_SERVER['SCRIPT_NAME'] ?? ''), PHP_URL_PATH));
+$isPromotionPage = $currentFile === 'products.php' && !empty($_GET['promotion']);
+$navActive = match (true) {
+    $isPromotionPage => 'promotion',
+    in_array($currentFile, ['products.php', 'product-detail.php'], true) => 'products',
+    $currentFile === 'about.php' => 'about',
+    $currentFile === 'news.php' => 'news',
+    $currentFile === 'contact.php' => 'contact',
+    $currentFile === 'index.php' => 'home',
+    default => '',
+};
+$navClass = static fn (string $key): string => $navActive === $key ? ' class="active" aria-current="page"' : '';
+
 ?>
 
 <!DOCTYPE html>
@@ -140,7 +154,7 @@ $cartCount = $_SESSION['cart_count'] ?? 0;
             <a
                 href="<?= BASE_URL ?>/index.php"
                 class="brand">
-                <img class="brand-logo" src="<?= ASSET_URL ?>/images/logo-horizontal.png" alt="Xe điện Tiệp Anh" width="141" height="44">
+                <img class="brand-logo" src="<?= ASSET_URL ?>/images/logo-horizontal.png" alt="Xe điện Tiệp Anh" width="183" height="57">
             </a>
 
 
@@ -164,17 +178,17 @@ $cartCount = $_SESSION['cart_count'] ?? 0;
 
             <nav class="desktop-menu">
 
-                <a href="<?= BASE_URL ?>/index.php">Trang chủ</a>
+                <a href="<?= BASE_URL ?>/index.php"<?= $navClass('home') ?>>Trang chủ</a>
 
-                <a href="<?= BASE_URL ?>/about.php">Giới thiệu</a>
+                <a href="<?= BASE_URL ?>/about.php"<?= $navClass('about') ?>>Giới thiệu</a>
 
-                <a href="<?= BASE_URL ?>/products.php">Sản phẩm</a>
+                <a href="<?= BASE_URL ?>/products.php"<?= $navClass('products') ?>>Sản phẩm</a>
 
-                <a href="<?= BASE_URL ?>/products.php?promotion=1">Ưu đãi</a>
+                <a href="<?= BASE_URL ?>/products.php?promotion=1"<?= $navClass('promotion') ?>>Ưu đãi</a>
 
-                <a href="<?= BASE_URL ?>/news.php">Tin tức</a>
+                <a href="<?= BASE_URL ?>/news.php"<?= $navClass('news') ?>>Tin tức</a>
 
-                <a href="<?= BASE_URL ?>/contact.php">Liên hệ</a>
+                <a href="<?= BASE_URL ?>/contact.php"<?= $navClass('contact') ?>>Liên hệ</a>
 
             </nav>
 
@@ -257,7 +271,7 @@ $cartCount = $_SESSION['cart_count'] ?? 0;
             <div class="side-nav-header">
 
                 <div class="brand">
-                    <img class="brand-logo" src="<?= ASSET_URL ?>/images/logo-horizontal.png" alt="Xe điện Tiệp Anh" width="141" height="44">
+                    <img class="brand-logo" src="<?= ASSET_URL ?>/images/logo-horizontal.png" alt="Xe điện Tiệp Anh" width="183" height="57">
                 </div>
 
 

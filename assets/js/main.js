@@ -473,3 +473,106 @@ document.addEventListener("keydown", function (event) {
     overlay.classList.remove("active");
   }
 });
+/* Slider sản phẩm & ưu đãi ở trang chủ */
+(function () {
+  var slider = document.getElementById("heroSlider");
+  if (!slider) {
+    return;
+  }
+
+  var track = slider.querySelector(".hero-slider-track");
+  var slides = Array.prototype.slice.call(
+    slider.querySelectorAll(".hero-slide"),
+  );
+  var dots = Array.prototype.slice.call(
+    slider.querySelectorAll(".hero-slider-dots button"),
+  );
+  var index = 0;
+  var timer = null;
+  var DELAY = 5000;
+
+  function go(next) {
+    index = (next + slides.length) % slides.length;
+    track.style.transform = "translateX(-" + index * 100 + "%)";
+    slides.forEach(function (slide, i) {
+      slide.classList.toggle("is-active", i === index);
+    });
+    dots.forEach(function (dot, i) {
+      dot.classList.toggle("is-active", i === index);
+      dot.setAttribute("aria-selected", i === index ? "true" : "false");
+    });
+  }
+
+  function stop() {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }
+
+  function start() {
+    stop();
+    if (
+      slides.length > 1 &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      timer = setInterval(function () {
+        go(index + 1);
+      }, DELAY);
+    }
+  }
+
+  var prev = slider.querySelector(".hero-slider-arrow.prev");
+  var next = slider.querySelector(".hero-slider-arrow.next");
+  if (prev) {
+    prev.addEventListener("click", function () {
+      go(index - 1);
+      start();
+    });
+  }
+  if (next) {
+    next.addEventListener("click", function () {
+      go(index + 1);
+      start();
+    });
+  }
+  dots.forEach(function (dot, i) {
+    dot.addEventListener("click", function () {
+      go(i);
+      start();
+    });
+  });
+
+  slider.addEventListener("mouseenter", stop);
+  slider.addEventListener("mouseleave", start);
+  slider.addEventListener("focusin", stop);
+  slider.addEventListener("focusout", start);
+
+  // Vuốt ngang trên điện thoại
+  var startX = null;
+  slider.addEventListener(
+    "touchstart",
+    function (e) {
+      startX = e.touches[0].clientX;
+      stop();
+    },
+    { passive: true },
+  );
+  slider.addEventListener(
+    "touchend",
+    function (e) {
+      if (startX !== null) {
+        var dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 50) {
+          go(index + (dx < 0 ? 1 : -1));
+        }
+        startX = null;
+      }
+      start();
+    },
+    { passive: true },
+  );
+
+  go(0);
+  start();
+})();

@@ -189,51 +189,84 @@ require_once __DIR__ . '/../views/layouts/header.php';
             </div>
 
 
-            <!-- HERO IMAGE -->
+            <!-- HERO SLIDER (bên phải) -->
 
             <div class="col-lg-6">
 
-                <?php
-                $heroProduct = $featuredProducts[0] ?? null;
-                $heroImagePath = $heroProduct
-                    ? str_replace(chr(92), '/', (string)$heroProduct['image'])
-                    : 'uploads/products/xe1.jpg';
-                $heroName = $heroProduct['name'] ?? 'Xe điện Tiệp Anh';
-                $heroHref = $heroProduct
-                    ? BASE_URL . '/product-detail.php?id=' . (int)$heroProduct['id']
-                    : BASE_URL . '/products.php';
-                ?>
-                <a class="hero-card" href="<?= htmlspecialchars($heroHref, ENT_QUOTES, 'UTF-8') ?>">
+                <div class="hero-slider" id="heroSlider" aria-roledescription="carousel" aria-label="Sản phẩm và ưu đãi nổi bật">
 
-                    <div class="hero-image-wrapper" style="--media-image: url('<?= BASE_URL ?>/../<?= htmlspecialchars(ltrim($heroImagePath, '/'), ENT_QUOTES, 'UTF-8') ?>')">
-                        <img
-                            src="<?= BASE_URL ?>/../<?= htmlspecialchars(ltrim($heroImagePath, '/'), ENT_QUOTES, 'UTF-8') ?>"
-                            alt="<?= htmlspecialchars($heroName, ENT_QUOTES, 'UTF-8') ?>"
-                            class="hero-image">
+                    <div class="hero-slider-viewport">
+                        <div class="hero-slider-track">
+
+                            <?php foreach ($featuredProducts as $i => $product): ?>
+                                <?php
+                                $price = (float)$product['price'];
+                                $currentPrice = (float)$product['current_price'];
+                                $discount = $price > 0 && $currentPrice < $price
+                                    ? (int)round((($price - $currentPrice) / $price) * 100)
+                                    : 0;
+                                $slideImage = BASE_URL . '/../' . ltrim(str_replace(chr(92), '/', (string)($product['image'] ?? '')), '/');
+                                $slideHref = BASE_URL . '/product-detail.php?id=' . (int)$product['id'];
+                                ?>
+                                <a class="hero-slide" href="<?= htmlspecialchars($slideHref, ENT_QUOTES, 'UTF-8') ?>" aria-roledescription="slide" aria-label="<?= $i + 1 ?> / <?= count($featuredProducts) ?>">
+
+                                    <div class="hero-slide-media">
+                                        <?php if ($discount > 0): ?>
+                                            <span class="hero-slide-discount">-<?= $discount ?>%</span>
+                                        <?php endif; ?>
+                                        <img src="<?= htmlspecialchars($slideImage, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?>"<?= $i > 0 ? ' loading="lazy"' : '' ?>>
+                                    </div>
+
+                                    <div class="hero-slide-info">
+                                        <div class="hero-slide-text">
+                                            <span class="hero-slide-tag<?= $discount > 0 ? ' is-sale' : '' ?>">
+                                                <?= $discount > 0 ? 'Ưu đãi giảm ' . $discount . '%' : 'Sản phẩm nổi bật' ?>
+                                            </span>
+                                            <h3><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></h3>
+                                            <p><?= htmlspecialchars($product['category_name'], ENT_QUOTES, 'UTF-8') ?></p>
+                                        </div>
+
+                                        <div class="hero-slide-price">
+                                            <small><?= $discount > 0 ? 'Giá ưu đãi' : 'Giá từ' ?></small>
+                                            <strong><?= number_format($currentPrice, 0, ',', '.') ?>₫</strong>
+                                            <?php if ($discount > 0): ?>
+                                                <del><?= number_format($price, 0, ',', '.') ?>₫</del>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+
+                                </a>
+                            <?php endforeach; ?>
+
+                            <?php if ($featuredProducts === []): ?>
+                                <a class="hero-slide" href="<?= BASE_URL ?>/products.php">
+                                    <div class="hero-slide-info">
+                                        <div class="hero-slide-text">
+                                            <h3>Xe điện Tiệp Anh</h3>
+                                            <p>Xem tất cả sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            <?php endif; ?>
+
+                        </div>
                     </div>
 
-                    <div class="hero-card-info">
-
-                        <div class="hero-card-text">
-                            <span class="product-label">
-                                <?= $heroProduct && $heroProduct['old_price'] !== null ? 'Ưu đãi' : 'Sản phẩm nổi bật' ?>
-                            </span>
-                            <h3><?= htmlspecialchars($heroName, ENT_QUOTES, 'UTF-8') ?></h3>
-                            <p><?= htmlspecialchars($heroProduct['category_name'] ?? 'Danh mục sản phẩm nổi bật', ENT_QUOTES, 'UTF-8') ?></p>
+                    <?php if (count($featuredProducts) > 1): ?>
+                        <button type="button" class="hero-slider-arrow prev" aria-label="Slide trước">
+                            <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+                        </button>
+                        <button type="button" class="hero-slider-arrow next" aria-label="Slide sau">
+                            <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+                        </button>
+                        <div class="hero-slider-dots" role="tablist">
+                            <?php foreach ($featuredProducts as $i => $product): ?>
+                                <button type="button" role="tab" aria-label="Slide <?= $i + 1 ?>"></button>
+                            <?php endforeach; ?>
                         </div>
+                    <?php endif; ?>
 
-                        <div class="hero-card-price">
-                            <small>Giá từ</small>
-                            <strong>
-                                <?= $heroProduct && (float)$heroProduct['current_price'] > 0
-                                    ? number_format((float)$heroProduct['current_price'], 0, ',', '.') . '₫'
-                                    : 'Liên hệ' ?>
-                            </strong>
-                        </div>
-
-                    </div>
-
-                </a>
+                </div>
 
             </div>
 

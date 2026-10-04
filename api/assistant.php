@@ -334,6 +334,20 @@ if ($action === 'compare') {
     ]);
 }
 
+// Câu hỏi tự do: ưu tiên Claude (API) trả lời dựa trên catalog; lỗi/không có khóa thì dùng tìm kiếm từ khóa bên dưới.
+require_once __DIR__ . '/../models/AiChat.php';
+
+$aiProducts = array_map(static function (array $product): array {
+    $product['current_price'] = Pricing::currentFromRow($product);
+
+    return $product;
+}, $products);
+$aiAnswer = AiChat::answer($message, $aiProducts);
+
+if ($aiAnswer !== null) {
+    $respond(200, ['answer' => $aiAnswer, 'products' => [], 'source' => 'ai']);
+}
+
 $normalizedMessage = $normalize($message);
 $messageTokens = array_values(array_filter(
     explode(' ', $normalizedMessage),
